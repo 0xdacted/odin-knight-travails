@@ -1,8 +1,9 @@
 class Knight
-  attr_accessor :row, :column, :parent, :up_right, :up_left, :right_up, :left_up, :down_right, :down_left, :right_down,
+  attr_accessor :parent, :up_right, :up_left, :right_up, :left_up, :down_right, :down_left, :right_down,
                 :left_down
+  attr_reader :row, :column
 
-  def initialize(row = rand(0...7), column = rand(0...7), parent = nil)
+  def initialize(row, column, parent = nil)
     @row = row
     @column = column
     @parent = parent
@@ -18,24 +19,23 @@ class Knight
 end
 
 class Board
-  attr_accessor :grid, :knight
-
   def initialize
     @grid = Array.new(8) { Array.new(8) }
-    move_tree(3, 3, 6, 6)
   end
 
-  def move_tree(row, column, goal_row, goal_column, queue = [])
-    count = 0
+  def move_knight(row, column, goal_row, goal_column, queue = [])
     root = Knight.new(row, column)
     queue.push(root)
     loop do
       root = queue.shift
       if root.row == goal_row && root.column == goal_column
-        until root == nil do
-        p "#{[root.row, root.column]}"
-        root = root.parent
+        count = -1
+        until root.nil?
+          p "#{[root.row, root.column]}"
+          root = root.parent
+          count += 1
         end
+        p "you made it in #{count} moves! see your path above"
         break
       else
         unless root.row > 5 || root.column > 6
@@ -71,9 +71,9 @@ class Board
           queue.push(root.left_down)
         end
       end
-      count += 1
     end
   end
 end
 
 chess_board = Board.new
+chess_board.move_knight(0, 0, 7, 7)
