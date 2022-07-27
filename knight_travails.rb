@@ -32,10 +32,11 @@ class Board
     loop do
       root = queue.shift
       if root.row == goal_row && root.column == goal_column
-        count.times do
+        until root == nil do
         p "#{[root.row, root.column]}"
         root = root.parent
         end
+        break
       else
         unless root.row > 5 || root.column > 6
           root.up_right = Knight.new(root.row + 2, root.column + 1, root)
